@@ -1,30 +1,26 @@
-import { CreateContextOptions } from 'vm'
-import { db } from '../db'
-import { goals } from '../db/schema'
+import { db } from "../db";
+import { goals } from "../db/schema";
 
-interface  CreateGoalRequest {
-    title: string
-    desiredWeeklyFrequency: number
-    
-
+interface CreateGoalRequest {
+	title: string;
+	desiredWeeklyFrequency: number;
 }
 
 export async function createGoal({
+	title,
+	desiredWeeklyFrequency,
+}: CreateGoalRequest) {
+	const result = await db
+		.insert(goals)
+		.values({
+			title,
+			desiredWeeklyFrequency,
+		})
+		.returning();
 
-    title,
-    desiredWeeklyFrequency,
-}: CreateGoalRequest ) {
+	const goal = result[0];
 
-    const result = await db.insert(goals).values({
-        title,
-        desiredWeeklyFrequency,
-    }).returning()
-    
-
-    const goal =result[0]
-
-    return{
-        goal,
-    }
+	return {
+		goal,
+	};
 }
-
